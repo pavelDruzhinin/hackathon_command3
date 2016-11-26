@@ -18,35 +18,33 @@
                         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <p class="lead">Login</p>
+                            <hr />
+                            if (!Request.Form.AllKeys.Contains("ConfirmPassword"))
+                            {
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            }
                             <div class="form-group">
-                                @Html.LabelFor(m => m.Email, new { @class = "ontrol-label" })
+                                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
                                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "example@gmail.com" })
                                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                                <span class="help-block"></span>
-                            </div>
-                            <div class="form-group">
                                 @Html.LabelFor(m => m.Password, new { @class = "control-label" })
                                 @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-
-                                <span class="help-block"></span>
-                            </div>
-                            <div class="form-group">
                                 <div class="checkbox">
                                     @Html.CheckBoxFor(m => m.RememberMe)
                                     @Html.LabelFor(m => m.RememberMe)
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-success btn-block">Login</button>
-                            <a href="/forgot/" class="btn btn-default btn-block">Help to login</a>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-success btn-block" value="Login">Login</button>
+                                            </div>
                         }
 
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <p class="lead">Register</p>
-                    <p><a href="/new-customer/" class="btn btn-info btn-block">Yes please, register now!</a>@Html.ActionLink("Register as a new user", "Register", null, new { @class = "btn btn-info btn-block" })</p>
+                    @{Html.RenderPartial("Register", Model?.registerView ?? new RegisterViewModel());}
                 </div>
             </div>
         </div>
