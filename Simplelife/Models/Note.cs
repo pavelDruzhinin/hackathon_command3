@@ -17,5 +17,6 @@ namespace Simplelife.Models
         /// Содержимое заметки
         /// </summary>
         public string Content { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

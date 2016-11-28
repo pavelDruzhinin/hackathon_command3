@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -16,6 +17,9 @@ namespace Simplelife.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public virtual ICollection<Note> Notes { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -23,6 +27,23 @@ namespace Simplelife.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+        }
+
+        public DbSet<Note> Notes { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(m => m.Notes)
+                .WithRequired(m => m.ApplicationUser)
+                .Map(p => p.MapKey("UserId"));
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(m => m.Categories)
+                .WithRequired(m => m.ApplicationUser)
+                .Map(p => p.MapKey("UserId"));
         }
 
         public static ApplicationDbContext Create()
