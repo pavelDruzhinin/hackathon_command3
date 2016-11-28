@@ -326,7 +326,7 @@ ul.notes li, ul.tag-list li {
 }
 
 ul.notes li div small {
-  position: absolute;
+  position: static;
   top: 5px;
   right: 5px;
   font-size: 10px;

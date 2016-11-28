@@ -6,8 +6,14 @@
 
 <dev class="row">
     <ul class="notes">
+        <li id="add-note" style="cursor:pointer">
+            <div class="yellow-bg">
+                <p><i class="fa fa-plus-square fa-5x" style="display:block;transform:translate(32%, 70%)"></i></p>
+                <a href="#" class="text-danger pull-right"></a>
+            </div>
+        </li>
         <li>
-            <div class="rotate-1 lazur-bg">
+            <div class="yellow-bg">
                 <small>12:03:28 12-04-2014</small>
                 <h4>Awesome title</h4>
                 <p>The years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
@@ -15,7 +21,7 @@
             </div>
         </li>
         <li>
-            <div class="rotate-2 red-bg">
+            <div class="yellow-bg">
                 <small>12:03:28 12-04-2014</small>
                 <h4>Awesome date</h4>
                 <p>The years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
@@ -23,7 +29,7 @@
             </div>
         </li>
         <li>
-            <div class="rotate-1 yellow-bg">
+            <div class="yellow-bg">
                 <small>12:03:28 12-04-2014</small>
                 <h4>Awesome project</h4>
                 <p>The years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
@@ -32,3 +38,10 @@
         </li>
     </ul>
 </dev>
+@section Scripts{
+    <script>
+        $("#add-note").on('click', function () {
+            alert();
+        })
+    </script>
+}
