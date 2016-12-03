@@ -20,5 +20,6 @@ namespace Simplelife.Models
         /// Список заметок в данной категории
         /// </summary>
         public List<Note> Notes { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }
