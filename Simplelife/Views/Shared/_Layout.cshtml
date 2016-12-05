@@ -15,7 +15,7 @@
         <div id="wrapper">
             <!-- Sidebar -->
             <div id="sidebar-wrapper">
-                <ul class="sidebar-nav">
+                <ul class="sidebar-nav list-unstyled">
                     <li class="sidebar-brand">
                         <a href="#">
                             Simplelife
@@ -23,6 +23,9 @@
                     </li>
                     <li>
                         @Html.ActionLink("Заметки", "Index", "Notes")
+                        <ul class="list-unstyled">
+                            <li class="category"><a href="#">Категории</a><a href="#" class="add-category">+</a></li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#">Другой раздел сайта</a>
