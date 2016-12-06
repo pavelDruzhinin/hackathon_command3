@@ -10,5 +10,6 @@ namespace Simplelife.ViewModels
     {
         public IEnumerable<Note> Notes { get; set; }
         public IEnumerable<Category> Categories { get; set; }
+        public Category CurrentCategory { get; set; }
     }
 }

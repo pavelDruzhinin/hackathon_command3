@@ -27,6 +27,11 @@ namespace Simplelife.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            if (Categories.FirstOrDefaultAsync(x => x.Name == "Входящие").Result == null)
+            {
+                Categories.Add(new Category { Name = "Входящие", Notes = new List<Note>() });
+                this.SaveChanges();
+            }
         }
 
         public DbSet<Note> Notes { get; set; }
@@ -43,7 +48,7 @@ namespace Simplelife.Models
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(m => m.Categories)
-                .WithRequired(m => m.ApplicationUser)
+                .WithOptional(m => m.ApplicationUser)
                 .Map(p => p.MapKey("UserId"));
         }
 

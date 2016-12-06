@@ -11,7 +11,7 @@ namespace Simplelife.Models
         /// <summary>
         /// Идентификатор родительской категории
         /// </summary>
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         /// <summary>
         /// Название категории
         /// </summary>

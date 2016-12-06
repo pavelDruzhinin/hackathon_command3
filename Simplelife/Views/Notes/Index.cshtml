@@ -4,7 +4,31 @@
     ViewBag.Title = "Заметки";
 }
 
-<div class="container">
+<div class="col-xs-2 well">
+    <ul class="nav nav-list categories">
+        <li>
+            <a href="#"><span class="tree-toggle glyphicon glyphicon-chevron-down" style="display:inline;margin-right:5px;"></span><span>Категории</span><span class="glyphicons glyphicon-plus pull-right add-category" style="margin-right:10px;"></span></a>
+            <ul class="nav nav-list tree">
+                @foreach (var category in Model.Categories)
+                {
+                    if (category == Model.CurrentCategory)
+                    {
+                        <li category="@category.Id" class="current-category">
+                            <a href="#">@category.Name</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li category="@category.Id">
+                            <a href="#">@category.Name</a>
+                        </li>
+                    }
+                }
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="col-xs-10">
     <div class="row">
         <ul class="notes">
             <li id="add-note" style="cursor:pointer">
@@ -12,22 +36,16 @@
                     <i class="fa fa-plus-square fa-5x"></i>
                 </div>
             </li>
-            <li>
-                <div class="yellow-bg">
-                    <small>Сохранено</small>
-                    <h4 contenteditable="true">Awesome title</h4>
-                    <p contenteditable="true">The years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
-                    <a href="#" class="text-danger pull-right"><i class="fa fa-trash-o "></i></a>
-                </div>
-            </li>
-            <li>
-                <div class="yellow-bg">
-                    <small>Сохранено</small>
-                    <h4 contenteditable="true">Awesome date</h4>
-                    <p contenteditable="true">The years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
-                    <a href="#" class="text-danger pull-right"><i class="fa fa-trash-o "></i></a>
-                </div>
-            </li>
+            @foreach (var note in Model.Notes)
+            {
+                <li>
+                    <div class="yellow-bg" note="@note.Id">
+                        <small>Сохранено</small>
+                        <p contenteditable="true">@note.Content</p>
+                        <a href="#" class="text-danger pull-right"><i class="fa fa-trash-o "></i></a>
+                    </div>
+                </li>
+            }
         </ul>
     </div>
 </div>
@@ -37,15 +55,30 @@
             $(this).after("<li> \
             <div class=\"yellow-bg\" style=\"opacity:0\"> \
                 <small>Сохранено</small> \
-                <h4>Awesome project</h4> \
                 <p contenteditable=\"true\"></p> \
                 <a href=\"#\" class=\"text-danger pull-right\"><i class=\"fa fa-trash-o \"></i></a> \
             </div> \
         </li>")
             $("div.yellow-bg:eq(1)").animate({ opacity: 1.0 }, 500, function () { $("div.yellow-bg:eq(1)").children("p").focus() })
         })
-        $("ul.notes").on('focusout', "li div p, li div h4", function () {
-            $(this).parent().children("small").animate({ opacity: 1.0 }, 500).delay(1000).animate({ opacity: 0 }, 500);
+        $("ul.notes").on('focusout', "li div p", function () {
+            if ($(this).text() == "") {
+                $(this).parent().parent().remove()
+            }
+            else {
+                $(this).parent().children("small").animate({ opacity: 1.0 }, 500).delay(1000).animate({ opacity: 0 }, 500);
+                $.post("/Notes/saveNote", { categoryId: $(".current-category").attr("category"), content: $(this).text() })
+            }
         })
+        $("ul.categories").on('click', ".add-category", function (e) {
+
+        })
+        $('.tree-toggle').click(function () {
+            if ($(this).parent().parent().children('ul.tree').is(":visible"))
+                $(this).addClass("glyphicon-chevron-right").removeClass("glyphicon-chevron-down");
+            else
+                $(this).addClass("glyphicon-chevron-down").removeClass("glyphicon-chevron-right");
+            $(this).parent().parent().children('ul.tree').toggle(200);
+        });
     </script>
 }

@@ -134,13 +134,15 @@ body {
     color: #999999;
 }
 
-.sidebar-nav li.category > a  {
-    width: 75%;
-    float:left;
+.categories a {
+    text-decoration: none;
+}
+.categories ul {
+    padding-left: 25px;
 }
 
-.add-category {
-    width: 10% !important;
+.current-category {
+    background-color:#ddd;
 }
 
 @media(min-width:768px) {
