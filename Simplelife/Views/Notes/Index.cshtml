@@ -4,8 +4,8 @@
     ViewBag.Title = "Заметки";
 }
 
-<div class="col-xs-2 well">
-    <ul class="nav nav-list categories">
+<div class="col-xs-2 well categories">
+    <ul class="nav nav-list">
         <li>
             <a href="#"><span class="tree-toggle glyphicon glyphicon-chevron-down" style="display:inline;margin-right:5px;"></span><span>Категории</span><span class="glyphicons glyphicon-plus pull-right add-category" style="margin-right:10px;"></span></a>
             <ul class="nav nav-list tree">
@@ -62,12 +62,14 @@
             $("div.yellow-bg:eq(1)").animate({ opacity: 1.0 }, 500, function () { $("div.yellow-bg:eq(1)").children("p").focus() })
         })
         $("ul.notes").on('focusout', "li div p", function () {
-            if ($(this).text() == "") {
+            if ($(this).text() == "" && $(this).parent().attr("note") == undefined) {
                 $(this).parent().parent().remove()
             }
             else {
                 $(this).parent().children("small").animate({ opacity: 1.0 }, 500).delay(1000).animate({ opacity: 0 }, 500);
-                $.post("/Notes/saveNote", { categoryId: $(".current-category").attr("category"), content: $(this).text() })
+                $.post("/Notes/saveNote", { categoryId: $(".current-category").attr("category"), content: $(this).text() }, function (data) {
+                    console.log($(this).parent().attr({ note: data['noteid'] }));
+                })
             }
         })
         $("ul.categories").on('click', ".add-category", function (e) {

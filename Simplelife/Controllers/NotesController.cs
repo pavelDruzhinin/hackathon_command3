@@ -18,7 +18,7 @@ namespace Simplelife.Controllers
             using (var db = new ApplicationDbContext())
             {
                 return View(new NotesViewModel { Categories = db.Categories.ToList(),
-                    Notes = db.Notes.ToList(),
+                    Notes = db.Notes.OrderByDescending(x => x.CreateData).ToList(),
                     CurrentCategory = db.Categories.FirstOrDefault(x => x.Id == (categoryId ?? db.Categories.FirstOrDefault(c => c.Name == "Входящие").Id))
                 });
             }
@@ -32,20 +32,22 @@ namespace Simplelife.Controllers
                 if (noteId == null)
                 {
                     string userId = User.Identity.GetUserId();
-                    db.Notes.Add(new Note
+                    Note note = new Note
                     {
                         Category = db.Categories.FirstOrDefault(x => x.Id == categoryId),
                         Content = content,
                         CreateData = DateTime.Now,
                         ApplicationUser = db.Users.FirstOrDefault(x => x.Id == userId)
-                    });
+                    };
+                    db.Notes.Add(note);
                     db.SaveChanges();
+                    return Json(new { message = "Сохранено", noteid = note.Id });
                 } else
                 {
                     db.Notes.FirstOrDefault(x => x.Id == noteId).Content = content;
                     db.SaveChanges();
+                    return Json(new { message = "Сохранено", noteid = noteId });
                 }
-                return Content("Сохранено");
             }
         }
     }
