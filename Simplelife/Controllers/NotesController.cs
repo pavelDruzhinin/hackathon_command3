@@ -54,5 +54,20 @@ namespace Simplelife.Controllers
                 }
             }
         }
+        public ActionResult deleteNote(int noteId)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                string userId = User.Identity.GetUserId();
+                var note = db.Notes.Find(noteId);
+                if(note.ApplicationUser == db.Users.FirstOrDefault(x => x.Id == userId))
+                {
+                    db.Notes.Remove(note);
+                    db.SaveChanges();
+                }
+
+                return Json(new { message = "Удалено" });
+            }
+        }
     }
 }

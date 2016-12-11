@@ -38,11 +38,11 @@
             </li>
             @foreach (var note in Model.Notes)
             {
-                <li>
-                    <div class="yellow-bg" note="@note.Id">
+                <li note="@note.Id">
+                    <div class="yellow-bg">
                         <small>Сохранено</small>
                         <p contenteditable="true">@note.Content</p>
-                        <a href="#" class="text-danger pull-right"><i class="fa fa-trash-o "></i></a>
+                        <a href="#" class="text-danger pull-right delete-note"><i class="fa fa-trash-o "></i></a>
                     </div>
                 </li>
             }
@@ -52,26 +52,49 @@
 @section Scripts{
     <script>
         $("#add-note").on('click', function () {
-            $(this).after("<li> \
-            <div class=\"yellow-bg\" style=\"opacity:0\"> \
+            $(this).after("<li  style=\"opacity:0\"> \
+            <div class=\"yellow-bg\"> \
                 <small>Сохранено</small> \
                 <p contenteditable=\"true\"></p> \
                 <a href=\"#\" class=\"text-danger pull-right\"><i class=\"fa fa-trash-o \"></i></a> \
             </div> \
         </li>")
-            $("div.yellow-bg:eq(1)").animate({ opacity: 1.0 }, 500, function () { $("div.yellow-bg:eq(1)").children("p").focus() })
+            $(this).next().animate({ opacity: 1.0 }, 500, function () { $("div.yellow-bg:eq(1)").children("p").focus() })
         })
         $("ul.notes").on('focusout', "li div p", function () {
-            if ($(this).text() == "" && $(this).parent().attr("note") == undefined) {
+            var self = this;
+            if ($(this).text() == "" && $(this).parent().parent().attr("note") == undefined) {
                 $(this).parent().parent().remove()
             }
             else {
                 $(this).parent().children("small").animate({ opacity: 1.0 }, 500).delay(1000).animate({ opacity: 0 }, 500);
-                $.post("/Notes/saveNote", { categoryId: $(".current-category").attr("category"), content: $(this).text() }, function (data) {
-                    console.log($(this).parent().attr({ note: data['noteid'] }));
-                })
+                if ($(this).parent().parent().attr("note") == undefined) {
+                    $.post("/Notes/saveNote", { categoryId: $(".current-category").attr("category"), content: $(this).text() }, function (data) {
+                        $(self).parent().parent().attr("note", data['noteid'])
+                        console.log(data['noteid'])
+                        console.log($(self).parent().parent().attr("note"))
+                    })
+                } else {
+                    $.post("/Notes/saveNote", { noteId:$(this).parent().parent().attr("note"), categoryId: $(".current-category").attr("category"), content: $(this).text() }, function (data) {
+                        console.log($(self).parent().attr({ note: data['noteid'] }));
+                    })
+                }
             }
         })
+        $("ul.notes").on('click', "a.delete-note", function () {
+            $(this).parent().parent().animate({ opacity: 0 }, 300, function () { $(this).remove() })
+            $.post("/Notes/deleteNote", { noteId:$(this).parent().parent().attr("note") })
+        })
+        $("ul.notes").dragsort({
+            dragSelector: "li[note]", dragEnd: function () {
+                console.log($(this).prev().attr("note"))
+                console.log($(this).attr("note"))
+                console.log($(this).next().attr("note"))
+            },
+            dragSelectorExclude: "p,a",
+            dragBetween: true,
+            placeHolderTemplate: "<li></li>"
+        });
         $("ul.categories").on('click', ".add-category", function (e) {
 
         })
