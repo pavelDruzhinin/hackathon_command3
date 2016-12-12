@@ -11,11 +11,7 @@ namespace Simplelife.Models
     public class Note
     {
         public int Id { get; set; }
-        public int CategoryId { get; set; }
-        /// <summary>
-        /// Категория заметки
-        /// </summary>
-        public Category Category { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
         /// <summary>
         /// Содержимое заметки
         /// </summary>

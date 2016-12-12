@@ -19,10 +19,7 @@ namespace Simplelife.Controllers
             {
                 return View(new NotesViewModel
                 {
-                    Categories = db.Categories.ToList(),
                     Notes = db.Notes.OrderByDescending(x => x.CreateData).ToList(),
-                    CurrentCategory = db.Categories
-                        .FirstOrDefault(x => x.Id == (categoryId ?? db.Categories.FirstOrDefault(c => c.Name == "Входящие").Id))
                 });
             }
         }
@@ -37,7 +34,6 @@ namespace Simplelife.Controllers
                     string userId = User.Identity.GetUserId();
                     Note note = new Note
                     {
-                        Category = db.Categories.FirstOrDefault(x => x.Id == categoryId),
                         Content = content,
                         CreateData = DateTime.Now,
                         ApplicationUser = db.Users.FirstOrDefault(x => x.Id == userId)

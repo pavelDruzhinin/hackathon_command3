@@ -19,7 +19,7 @@ namespace Simplelife.Models
         }
 
         public virtual ICollection<Note> Notes { get; set; }
-        public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -27,15 +27,10 @@ namespace Simplelife.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            if (Categories.FirstOrDefaultAsync(x => x.Name == "Входящие").Result == null)
-            {
-                Categories.Add(new Category { Name = "Входящие", Notes = new List<Note>() });
-                this.SaveChanges();
-            }
         }
 
         public DbSet<Note> Notes { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Tag> Tags{ get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -47,9 +42,14 @@ namespace Simplelife.Models
                 .Map(p => p.MapKey("UserId"));
 
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(m => m.Categories)
-                .WithOptional(m => m.ApplicationUser)
+                .HasMany(m => m.Tags)
+                .WithRequired(m => m.ApplicationUser)
                 .Map(p => p.MapKey("UserId"));
+
+            modelBuilder.Entity<Tag>()
+                .HasMany(m => m.Notes)
+                .WithMany(m => m.Tags)
+                .Map(t => t.MapLeftKey("TagId").MapRightKey("NoteId"));
         }
 
         public static ApplicationDbContext Create()
