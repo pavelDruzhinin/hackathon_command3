@@ -7,11 +7,23 @@ namespace Simplelife.Migrations
     {
         public override void Up()
         {
-            RenameTable(name: "dbo.Categories", newName: "Tags");
             DropForeignKey("dbo.Notes", "CategoryId", "dbo.Categories");
-            DropForeignKey("dbo.Categories", "UserId", "dbo.AspNetUsers");
-            DropIndex("dbo.Tags", new[] { "UserId" });
             DropIndex("dbo.Notes", new[] { "CategoryId" });
+            RenameColumn(table: "dbo.Categories", name: "UserId", newName: "ApplicationUser_Id");
+            RenameColumn(table: "dbo.Notes", name: "CategoryId", newName: "Category_Id");
+            RenameIndex(table: "dbo.Categories", name: "IX_UserId", newName: "IX_ApplicationUser_Id");
+            CreateTable(
+                "dbo.Tags",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
+            
             CreateTable(
                 "dbo.TagNotes",
                 c => new
@@ -25,30 +37,29 @@ namespace Simplelife.Migrations
                 .Index(t => t.TagId)
                 .Index(t => t.NoteId);
             
-            AlterColumn("dbo.Tags", "UserId", c => c.String(nullable: false, maxLength: 128));
-            CreateIndex("dbo.Tags", "UserId");
-            AddForeignKey("dbo.Tags", "UserId", "dbo.AspNetUsers", "Id", cascadeDelete: true);
-            DropColumn("dbo.Tags", "ParentId");
-            DropColumn("dbo.Notes", "CategoryId");
+            AlterColumn("dbo.Notes", "Category_Id", c => c.Int());
+            CreateIndex("dbo.Notes", "Category_Id");
+            AddForeignKey("dbo.Notes", "Category_Id", "dbo.Categories", "Id");
         }
         
         public override void Down()
         {
-            AddColumn("dbo.Notes", "CategoryId", c => c.Int(nullable: false));
-            AddColumn("dbo.Tags", "ParentId", c => c.Int());
+            DropForeignKey("dbo.Notes", "Category_Id", "dbo.Categories");
             DropForeignKey("dbo.Tags", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.TagNotes", "NoteId", "dbo.Notes");
             DropForeignKey("dbo.TagNotes", "TagId", "dbo.Tags");
             DropIndex("dbo.TagNotes", new[] { "NoteId" });
             DropIndex("dbo.TagNotes", new[] { "TagId" });
             DropIndex("dbo.Tags", new[] { "UserId" });
-            AlterColumn("dbo.Tags", "UserId", c => c.String(maxLength: 128));
+            DropIndex("dbo.Notes", new[] { "Category_Id" });
+            AlterColumn("dbo.Notes", "Category_Id", c => c.Int(nullable: false));
             DropTable("dbo.TagNotes");
+            DropTable("dbo.Tags");
+            RenameIndex(table: "dbo.Categories", name: "IX_ApplicationUser_Id", newName: "IX_UserId");
+            RenameColumn(table: "dbo.Notes", name: "Category_Id", newName: "CategoryId");
+            RenameColumn(table: "dbo.Categories", name: "ApplicationUser_Id", newName: "UserId");
             CreateIndex("dbo.Notes", "CategoryId");
-            CreateIndex("dbo.Tags", "UserId");
-            AddForeignKey("dbo.Categories", "UserId", "dbo.AspNetUsers", "Id");
             AddForeignKey("dbo.Notes", "CategoryId", "dbo.Categories", "Id", cascadeDelete: true);
-            RenameTable(name: "dbo.Tags", newName: "Categories");
         }
     }
 }

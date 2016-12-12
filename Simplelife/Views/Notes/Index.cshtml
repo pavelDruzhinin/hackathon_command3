@@ -4,31 +4,7 @@
     ViewBag.Title = "Заметки";
 }
 
-<div class="col-xs-2 well categories">
-    <ul class="nav nav-list">
-        <li>
-            <a href="#"><span class="tree-toggle glyphicon glyphicon-chevron-down" style="display:inline;margin-right:5px;"></span><span>Категории</span><span class="glyphicons glyphicon-plus pull-right add-category" style="margin-right:10px;"></span></a>
-            <ul class="nav nav-list tree">
-                @foreach (var category in Model.Categories)
-                {
-                    if (category == Model.CurrentCategory)
-                    {
-                        <li category="@category.Id" class="current-category">
-                            <a href="#">@category.Name</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li category="@category.Id">
-                            <a href="#">@category.Name</a>
-                        </li>
-                    }
-                }
-            </ul>
-        </li>
-    </ul>
-</div>
-<div class="col-xs-10">
+<div class="container">
     <div class="row">
         <ul class="notes">
             <li id="add-note" style="cursor:pointer">
@@ -42,7 +18,7 @@
                     <div class="yellow-bg">
                         <small>Сохранено</small>
                         <p contenteditable="true">@note.Content</p>
-                        <a href="#" class="text-danger pull-right delete-note"><i class="fa fa-trash-o "></i></a>
+                        <i contenteditable="true">тэги,фыв</i><a href="#" class="text-danger pull-right delete-note"><i class="fa fa-trash-o "></i></a>
                     </div>
                 </li>
             }
@@ -75,7 +51,7 @@
                         console.log($(self).parent().parent().attr("note"))
                     })
                 } else {
-                    $.post("/Notes/saveNote", { noteId:$(this).parent().parent().attr("note"), categoryId: $(".current-category").attr("category"), content: $(this).text() }, function (data) {
+                    $.post("/Notes/saveNote", { noteId: $(this).parent().parent().attr("note"), categoryId: $(".current-category").attr("category"), content: $(this).text() }, function (data) {
                         console.log($(self).parent().attr({ note: data['noteid'] }));
                     })
                 }
@@ -83,7 +59,7 @@
         })
         $("ul.notes").on('click', "a.delete-note", function () {
             $(this).parent().parent().animate({ opacity: 0 }, 300, function () { $(this).remove() })
-            $.post("/Notes/deleteNote", { noteId:$(this).parent().parent().attr("note") })
+            $.post("/Notes/deleteNote", { noteId: $(this).parent().parent().attr("note") })
         })
         $("ul.notes").dragsort({
             dragSelector: "li[note]", dragEnd: function () {
