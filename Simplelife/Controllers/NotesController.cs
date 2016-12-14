@@ -25,7 +25,7 @@ namespace Simplelife.Controllers
         }
 
         [HttpPost]
-        public ActionResult saveNote(int? noteId, int categoryId, string content)
+        public ActionResult saveNote(int? noteId, string content)
         {
             using (var db = new ApplicationDbContext())
             {
@@ -56,7 +56,7 @@ namespace Simplelife.Controllers
             {
                 string userId = User.Identity.GetUserId();
                 var note = db.Notes.Find(noteId);
-                if(note.ApplicationUser == db.Users.FirstOrDefault(x => x.Id == userId))
+                if (note.ApplicationUser == db.Users.FirstOrDefault(x => x.Id == userId))
                 {
                     db.Notes.Remove(note);
                     db.SaveChanges();
@@ -64,6 +64,21 @@ namespace Simplelife.Controllers
 
                 return Json(new { message = "Удалено" });
             }
+        }
+
+        [HttpPost]
+        public ActionResult moveNote(int nextnote, int currentnote, int prevnote)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                Note current = db.Notes.Find(currentnote),
+                    next = db.Notes.Find(nextnote),
+                    prev = db.Notes.Find(prevnote);
+
+                current.CreateData = DateTime.FromBinary(prev.CreateData.ToBinary() + (next.CreateData.ToBinary() - prev.CreateData.ToBinary()) / 2);
+                db.SaveChanges();
+            }
+            return Content("");
         }
     }
 }
