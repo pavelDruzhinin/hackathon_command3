@@ -11,7 +11,6 @@ namespace Simplelife.Models
     public class Note
     {
         public int Id { get; set; }
-        public virtual ICollection<Tag> Tags { get; set; }
         /// <summary>
         /// Содержимое заметки
         /// </summary>

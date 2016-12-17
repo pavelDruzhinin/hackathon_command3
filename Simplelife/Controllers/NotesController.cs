@@ -13,13 +13,14 @@ namespace Simplelife.Controllers
     public class NotesController : Controller
     {
         // GET: Notes
-        public ActionResult Index(int? categoryId)
+        public ActionResult Index()
         {
             using (var db = new ApplicationDbContext())
             {
+                string userId = User.Identity.GetUserId();
                 return View(new NotesViewModel
                 {
-                    Notes = db.Notes.OrderByDescending(x => x.CreateData).ToList(),
+                    Notes = db.Notes.Where(x => x.ApplicationUser == db.Users.FirstOrDefault(y => y.Id == userId)).OrderByDescending(x => x.CreateData).ToList(),
                 });
             }
         }
@@ -67,15 +68,29 @@ namespace Simplelife.Controllers
         }
 
         [HttpPost]
-        public ActionResult moveNote(int nextnote, int currentnote, int prevnote)
+        public ActionResult moveNote(int? nextnote, int currentnote, int? prevnote)
         {
             using (var db = new ApplicationDbContext())
             {
-                Note current = db.Notes.Find(currentnote),
-                    next = db.Notes.Find(nextnote),
-                    prev = db.Notes.Find(prevnote);
+                if (nextnote == null)
+                {
+                    Note current = db.Notes.Find(currentnote),
+                        prev = db.Notes.Find(prevnote);
+                    current.CreateData = prev.CreateData.AddMinutes(10);
+                } else if(prevnote == null) {
+                    Note current = db.Notes.Find(currentnote),
+                        next = db.Notes.Find(nextnote);
+                    current.CreateData = DateTime.FromBinary(next.CreateData.ToBinary() - 10000);
+                }
+                else
+                {
+                    Note current = db.Notes.Find(currentnote),
+                        next = db.Notes.Find(nextnote),
+                        prev = db.Notes.Find(prevnote);
 
-                current.CreateData = DateTime.FromBinary(prev.CreateData.ToBinary() + (next.CreateData.ToBinary() - prev.CreateData.ToBinary()) / 2);
+                    current.CreateData = DateTime.FromBinary(prev.CreateData.ToBinary() + (next.CreateData.ToBinary() - prev.CreateData.ToBinary()) / 2);
+                }
+
                 db.SaveChanges();
             }
             return Content("");

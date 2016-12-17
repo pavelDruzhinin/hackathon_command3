@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
 </head>
 <body>
     @if (Request.IsAuthenticated)
@@ -22,16 +23,10 @@
                         </a>
                     </li>
                     <li>
+                        @Html.ActionLink("Задачи", "Index", "Tasks")
+                    </li>
+                    <li>
                         @Html.ActionLink("Заметки", "Index", "Notes")
-                    </li>
-                    <li>
-                        <a href="#">Другой раздел сайта</a>
-                    </li>
-                    <li>
-                        <a href="#">Другой раздел сайта</a>
-                    </li>
-                    <li>
-                        <a href="#">Другой раздел сайта</a>
                     </li>
                     @if (Request.IsAuthenticated)
                     {
@@ -63,6 +58,8 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Scripts/jquery.dragsort-0.5.2.min.js")
+    @Scripts.Render("~/Scripts/moment.min.js")
+    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
     @RenderSection("scripts", required: false)
 </body>
 </html>

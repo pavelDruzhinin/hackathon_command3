@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Simplelife.Models.Objective>
+    @{
+        Layout = null;
+    }
+
+@foreach (var task in Model)
+{
+    <div class="list-group-item" id=@("task" + task.Id)>
+        <h4 class="list-group-item-heading">
+            @task.Name
+        </h4>
+        <h6 class="list-group-item-heading">
+            @task.Date.ToString()
+        </h6>
+        <p class="list-group-item-text">
+            @task.Description
+        </p>
+        <h4><a href="">Удалить</a></h4>
+    </div>
+}

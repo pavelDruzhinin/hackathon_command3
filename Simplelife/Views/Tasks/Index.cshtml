@@ -1,0 +1,143 @@
+﻿@model IEnumerable<Simplelife.Models.Objective>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Заголовок модального окна -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Добавить задачу</h4>
+                </div>
+                <!-- Основное содержимое модального окна -->
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Название</label>
+                            <input type="text" class="form-control" id="taskname">
+                        </div>
+                        <label for="name">Дата</label>
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' class="form-control" id="taskdate" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleTextarea">Описание</label>
+                            <textarea class="form-control" id="taskdescr"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <!-- Футер модального окна -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="saveTask">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+        <div class="panel panel-default">
+            <div class="panel-heading resume-heading">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-xs-12 col-sm-4">
+                            <div style="overflow:hidden;">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div id="datetimepicker12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-xs-12 col-sm-8">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-default orange-circle-button" href="#" id="add-task">Добавить<br />задачу<br /></button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="well">
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tab1">
+                        <div class="bs-callout bs-callout-danger">
+                            <ul class="list-group" id="taskList">
+                                @foreach (var task in Model)
+                                {
+                                    <div class="list-group-item" id=@("task" + task.Id)>
+                                        <h4 class="list-group-item-heading">
+                                            @task.Name
+                                        </h4>
+                                        <h6 class="list-group-item-heading">
+                                            @task.Date.ToString()
+                                        </h6>
+                                        <p class="list-group-item-text">
+                                            @task.Description
+                                    </p>
+                                    <h4><a href="">Удалить</a></h4>
+                                </div>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(function () {
+            $('#datetimepicker12').datetimepicker({
+                inline: true,
+                format: 'DD/MM/YYYY'
+            }).on('dp.change',
+                function (ev) {
+                    $.get("/Tasks/Tasks", { date: ev.date.format("YYYY-MM-DD") }, function (data) {
+                        $("#taskList").html(data);
+                    });
+                });
+        });
+        $('#datetimepicker1').datetimepicker({
+            sideBySide: true
+        });
+        $("#add-task").on("click",
+            function () {
+                $("#myModal").modal('show');
+                $('input').val('');
+            })
+        $("#saveTask").on('click',
+            function () {
+                $.post("/Tasks/save",
+                    {
+                        taskname: $("#taskname").val(),
+                        taskdate: $("#taskdate").val(),
+                        taskdescr: $("#taskdescr")
+                            .val()
+                    },
+                    function() {
+
+                    });
+                $("#myModal").modal('hide');
+            })
+    </script>
+}

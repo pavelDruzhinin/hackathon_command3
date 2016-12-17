@@ -19,7 +19,7 @@ namespace Simplelife.Models
         }
 
         public virtual ICollection<Note> Notes { get; set; }
-        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<Objective> Objectives { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -30,7 +30,7 @@ namespace Simplelife.Models
         }
 
         public DbSet<Note> Notes { get; set; }
-        public DbSet<Tag> Tags{ get; set; }
+        public DbSet<Objective> Objectives { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -42,14 +42,9 @@ namespace Simplelife.Models
                 .Map(p => p.MapKey("UserId"));
 
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(m => m.Tags)
+                .HasMany(m => m.Objectives)
                 .WithRequired(m => m.ApplicationUser)
                 .Map(p => p.MapKey("UserId"));
-
-            modelBuilder.Entity<Tag>()
-                .HasMany(m => m.Notes)
-                .WithMany(m => m.Tags)
-                .Map(t => t.MapLeftKey("TagId").MapRightKey("NoteId"));
         }
 
         public static ApplicationDbContext Create()

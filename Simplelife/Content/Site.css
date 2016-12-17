@@ -32,6 +32,13 @@ textarea {
     max-width: 280px;
 }
 
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+    max-width: 100% !important;
+}
+
+
 body {
     overflow-x: hidden;
 }
@@ -265,6 +272,22 @@ body {
         color: #d9534f;
     }
 
+    .bs-callout-info {
+    border-left-color: #5bc0de;
+}
+
+    .bs-callout-info h4 {
+        color: #5bc0de;
+    }
+
+    .bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+
+    .bs-callout-warning h4 {
+        color: #f0ad4e;
+    }
+
 .resume .list-group-item:first-child, .resume .list-group-item:last-child {
     border-radius: 0;
 }
@@ -443,3 +466,33 @@ ul.notes li div {
             background-color: #c1803a;
         }
 /*END NOTES*/
+
+.orange-circle-button {
+	box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
+	border: .5em solid #E84D0E;
+	font-size: 1em;
+	line-height: 1.1em;
+	color: #ffffff;
+	background-color: #e84d0e;
+	margin: auto;
+	border-radius: 50%;
+	height: 7em;
+	width: 7em;
+	position: relative;
+}
+.orange-circle-button:hover {
+	color:#ffffff;
+    background-color: #e84d0e;
+	text-decoration: none;
+	border-color: #ff7536;
+	
+}
+.orange-circle-button:visited {
+	color:#ffffff;
+    background-color: #e84d0e;
+	text-decoration: none;
+	
+}
+.orange-circle-link-greater-than {
+    font-size: 1em;
+}

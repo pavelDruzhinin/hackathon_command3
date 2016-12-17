@@ -9,6 +9,5 @@ namespace Simplelife.ViewModels
     public class NotesViewModel
     {
         public IEnumerable<Note> Notes { get; set; }
-        public IEnumerable<Tag> Tags { get; set; }
     }
 }
